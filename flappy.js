@@ -128,6 +128,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
     let posX = 10
     let posY = yPos
+
+    moveUp()
     
     function moveUp(){
         velY = -6
