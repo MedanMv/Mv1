@@ -14,11 +14,11 @@ pipeUp.src = './img/pipeUp.png'
 let road = new Image()
 road.src = './img/road.png'
 
-let fly = new Audio()
-fly.src = './audio/fly.mp3'
+// let fly = new Audio()
+// fly.src = './audio/fly.mp3'
 
-let score = new Audio()
-score.src = './audio/score.mp3'
+// let score = new Audio()
+// score.src = './audio/score.mp3'
 
 let canvas = document.getElementById('canvas')
 let ctx = canvas.getContext('2d')
