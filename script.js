@@ -1,23 +1,23 @@
 let bird = new Image()
-bird.src = './img/bird.png'
+bird.src = 'bird.png'
 
 let back = new Image()
-back.src = './img/back.png'
+back.src = 'back.png'
 
 let pipeBottom = new Image()
-pipeBottom.src = './img/pipeBottom.png'
+pipeBottom.src = 'pipeBottom.png'
 
 let pipeUp = new Image()
-pipeUp.src = './img/pipeUp.png'
+pipeUp.src = 'pipeUp.png'
 
 let road = new Image()
-road.src = './img/road.png'
+road.src = 'road.png'
 
 let fly = new Audio()
-fly.src = './audio/fly.mp3'
+fly.src = 'fly.mp3'
 
 let score = new Audio()
-score.src = './audio/score.mp3'
+score.src = 'score.mp3'
 
 let canvas = document.getElementById('canvas')
 let ctx = canvas.getContext('2d')
