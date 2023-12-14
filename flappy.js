@@ -23,19 +23,37 @@ score.src = './audio/score.mp3'
 let canvas = document.getElementById('canvas')
 let ctx = canvas.getContext('2d')
 
+bird.onload = imageLoaded;
+back.onload = imageLoaded;
+pipeBottom.onload = imageLoaded;
+pipeUp.onload = imageLoaded;
+road.onload = imageLoaded;
+
 canvas.height = 512
 canvas.width = 256
-
 let isRotating = false;
 let rotationAngle = 0;
-
 let yPos = 120
 let velY = 0
 let gravity = 0.4
-
 let gap = 110
 let pipe = []
 let outPipes = []
+let gameStarted = false
+let imagesLoaded = 0
+const totalImages = 5
+
+function startGame() {
+    gameStarted = true;
+    setInterval(draw, 20); 
+}
+
+function imageLoaded() {
+    imagesLoaded++;
+    if (imagesLoaded === totalImages) {
+        drawStartScreen(); // Draw start screen after all images are loaded
+    }
+}
 
 
 pipe[0]={
@@ -61,49 +79,70 @@ function collisionTop(objA, objB) {                 //universal
     )
 }
 
+function drawStartScreen() {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '30px Arial';
+    ctx.fillText('Click to start!', canvas.width / 2 - 100, canvas.height / 2);
+}
+
 function draw(){
-    velY = velY + gravity
-    yPos = yPos + velY
-    ctx.drawImage(back,0,0)
-    // ctx.drawImage(bird,10,yPos)
-    if(yPos >= canvas.height - road.height || yPos <= 0){             //  collision(bird,pipeUp) rabotaet s pervoi
-        location.reload()
-        yPos = 150
-        velY = 0
-    } 
-
-    for(let i = 0; i < pipe.length; i++){
-        if (collisionTop(bird, pipe[i]) || collisionBottom(bird, pipe[i])) {         
-            location.reload()           
-            yPos = 150            // !!!!
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    
+    if (!gameStarted) {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.font = '30px Arial';
+        ctx.fillText('Click to start!', canvas.width / 2 - 100, canvas.height / 2);
+        // Draw the start screen
+    } else {
+        velY = velY + gravity
+        yPos = yPos + velY
+        ctx.drawImage(back,0,0)
+        // ctx.drawImage(bird,10,yPos)
+        if(yPos >= canvas.height - road.height || yPos <= 0){             //  collision(bird,pipeUp) rabotaet s pervoi
+            location.reload()
+            yPos = 150
             velY = 0
-        }
-        if(pipe[i].x < -pipeUp.width){
-            ctx.clearRect(-pipeUp.width,canvas.height,pipeUp.width,canvas.height)
-        }else{
-            ctx.drawImage(pipeUp, pipe[i].x, pipe[i].y)
-            ctx.drawImage(pipeBottom, pipe[i].x, pipe[i].y + pipeUp.height + gap)
-            pipe[i].x -= 2
-        
-            if(pipe[i].x == 80){
-                pipe.push({
-                    x: canvas.width,
-                    y: Math.floor(Math.random()*pipeUp.height)-pipeUp.height
-                })
+        } 
+    
+        for(let i = 0; i < pipe.length; i++){
+            if (collisionTop(bird, pipe[i]) || collisionBottom(bird, pipe[i])) {         
+                location.reload()           
+                yPos = 150            // !!!!
+                velY = 0
             }
-        }  
+            if(pipe[i].x < -pipeUp.width){
+                ctx.clearRect(-pipeUp.width,canvas.height,pipeUp.width,canvas.height)
+            }else{
+                ctx.drawImage(pipeUp, pipe[i].x, pipe[i].y)
+                ctx.drawImage(pipeBottom, pipe[i].x, pipe[i].y + pipeUp.height + gap)
+                pipe[i].x -= 2
+            
+                if(pipe[i].x == 80){
+                    pipe.push({
+                        x: canvas.width,
+                        y: Math.floor(Math.random()*pipeUp.height)-pipeUp.height
+                    })
+                }
+            }  
+        }
+        ctx.drawImage(road,0,canvas.height - road.height)
+    
+        ctx.save();
+    
+        ctx.translate(10 + bird.width / 2, yPos + bird.height / 2);
+    
+        ctx.rotate((Math.PI / 180) * rotationAngle);
+    
+        ctx.drawImage(bird, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
+    
+        ctx.restore();
+        // Your game rendering logic here...
+        // ...
     }
-    ctx.drawImage(road,0,canvas.height - road.height)
-
-    ctx.save();
-
-    ctx.translate(10 + bird.width / 2, yPos + bird.height / 2);
-
-    ctx.rotate((Math.PI / 180) * rotationAngle);
-
-    ctx.drawImage(bird, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
-
-    ctx.restore();
 }
 
 canvas.addEventListener('mousedown', function(event) {
@@ -113,6 +152,9 @@ canvas.addEventListener('mousedown', function(event) {
 });
 
 canvas.addEventListener('mouseup', function(event) {
+    if (!gameStarted && event.button === 0) { // Left mouse button clicked and game not started
+    startGame();
+}
     if (event.button === 0) { // Left mouse button released
         isRotating = false;
         rotationAngle = 0; // Reset rotation angle when the mouse is released
@@ -131,4 +173,4 @@ function moveUp(){
     velY = -6
 }
 
-setInterval(draw,20)
+// setInterval(draw,20)
