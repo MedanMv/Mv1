@@ -1,4 +1,3 @@
-
 let bird = new Image()
 bird.src = './img/bird.png'
 
@@ -42,6 +41,7 @@ let outPipes = []
 let gameStarted = false
 let imagesLoaded = 0
 const totalImages = 5
+let con = false
 
 function startGame() {
     gameStarted = true;
@@ -80,24 +80,28 @@ function collisionTop(objA, objB) {                 //universal
 }
 
 function drawStartScreen() {
+    ctx.drawImage(back,0,0)
+    ctx.drawImage(road,0,canvas.height - road.height)
+    ctx.drawImage(bird,10,yPos)
+    ctx.globalAlpha = 0.5
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
     ctx.font = '30px Arial';
-    ctx.fillText('Click to start!', canvas.width / 2 - 100, canvas.height / 2);
+    ctx.fillText('Click to start', canvas.width / 2 - 100, canvas.height / 2);
+    ctx.globalAlpha = 1
 }
 
 function draw(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // ctx.clearRect(0, 0, canvas.width, canvas.height)
     
     if (!gameStarted) {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'white';
-        ctx.font = '30px Arial';
-        ctx.fillText('Click to start!', canvas.width / 2 - 100, canvas.height / 2);
-        // Draw the start screen
+        imageLoaded()
     } else {
+        if(con == false){
+            ctx.clearRect(10,yPos,bird.width,bird.height)
+            con = true
+        }
         velY = velY + gravity
         yPos = yPos + velY
         ctx.drawImage(back,0,0)
@@ -147,6 +151,7 @@ function draw(){
 
 canvas.addEventListener('mousedown', function(event) {
     if (event.button === 0) { 
+        moveUp()
         rotationAngle -= 37;
     }
 });
@@ -160,11 +165,6 @@ canvas.addEventListener('mouseup', function(event) {
         rotationAngle = 0; // Reset rotation angle when the mouse is released
     }
 });
-
-
-moveUp()
-
-canvas.addEventListener('mousedown', moveUp)
 
 let posX = 10
 let posY = yPos
