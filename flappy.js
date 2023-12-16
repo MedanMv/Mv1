@@ -42,10 +42,11 @@ let gameStarted = false
 let imagesLoaded = 0
 const totalImages = 5
 let con = false
+var ref = null
 
 function startGame() {
     gameStarted = true;
-    setInterval(draw, 20); 
+    ref = setInterval(draw, 20); 
 }
 
 function imageLoaded() {
@@ -55,6 +56,17 @@ function imageLoaded() {
     }
 }
 
+function restart(){
+    for(var i = 0;i < pipe.length;i++){
+        pipe.shift()
+    }
+    pipe[0] = {
+        x: canvas.width,
+        y: 0
+    }
+    gameStarted = false
+    drawStartScreen()
+}
 
 pipe[0]={
     x: canvas.width,
@@ -80,12 +92,14 @@ function collisionTop(objA, objB) {                 //universal
 }
 
 function drawStartScreen() {
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    ctx.clearRect(10,yPos,bird.width,bird.height)
     ctx.drawImage(back,0,0)
     ctx.drawImage(road,0,canvas.height - road.height)
     ctx.drawImage(bird,10,yPos)
     ctx.globalAlpha = 0.5
     ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 140, canvas.width, canvas.height/2.5);
     ctx.fillStyle = 'white';
     ctx.font = '30px Arial';
     ctx.fillText('Click to start', canvas.width / 2 - 100, canvas.height / 2);
@@ -93,8 +107,6 @@ function drawStartScreen() {
 }
 
 function draw(){
-    // ctx.clearRect(0, 0, canvas.width, canvas.height)
-    
     if (!gameStarted) {
         imageLoaded()
     } else {
@@ -106,15 +118,19 @@ function draw(){
         yPos = yPos + velY
         ctx.drawImage(back,0,0)
         // ctx.drawImage(bird,10,yPos)
-        if(yPos >= canvas.height - road.height || yPos <= 0){             //  collision(bird,pipeUp) rabotaet s pervoi
-            location.reload()
+        if(yPos >= canvas.height - road.height || yPos <= 0){  
+            clearInterval(ref)          //  collision(bird,pipeUp) rabotaet s pervoi
+            // location.reload()
+            restart()
             yPos = 150
             velY = 0
         } 
     
         for(let i = 0; i < pipe.length; i++){
-            if (collisionTop(bird, pipe[i]) || collisionBottom(bird, pipe[i])) {         
-                location.reload()           
+            if (collisionTop(bird, pipe[i]) || collisionBottom(bird, pipe[i])) { 
+                clearInterval(ref)        
+                // location.reload()   
+                restart()       
                 yPos = 150            // !!!!
                 velY = 0
             }
