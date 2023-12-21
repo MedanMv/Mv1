@@ -57,7 +57,8 @@ function imageLoaded() {
 }
 
 function restart(){
-    pipe = {}
+    for(i = 0;i <pipe.length;i++){
+        pipe.splice(i,1)
     pipe[0] = {
         x: canvas.width,
         y: 0
