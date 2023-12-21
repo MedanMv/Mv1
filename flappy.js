@@ -57,8 +57,9 @@ function imageLoaded() {
 }
 
 function restart(){
-    for(i = 0;i <pipe.length;i++){
-        pipe.splice(i,1)
+    for(var i = 0;i < pipe.length;i++){
+        pipe.shift()
+    }
     pipe[0] = {
         x: canvas.width,
         y: 0
