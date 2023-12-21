@@ -57,9 +57,7 @@ function imageLoaded() {
 }
 
 function restart(){
-    for(var i = 0;i < pipe.length;i++){
-        pipe.shift()
-    }
+    pipe = {}
     pipe[0] = {
         x: canvas.width,
         y: 0
